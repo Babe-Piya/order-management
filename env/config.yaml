@@ -1,0 +1,7 @@
+ServerPort: "8181"
+Database:
+  Hostname: "localhost"
+  Port: "5432"
+  Username: "postgres"
+  Password: "example"
+  DatabaseName: "orders"
