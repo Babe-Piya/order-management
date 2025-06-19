@@ -29,7 +29,21 @@ type OrderItemData struct {
 }
 
 func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderByIDResponse, error) {
-	order, err := srv.OrderRepo.GetOrderByID(ctx, id, nil)
+	tx, err := srv.OrderRepo.BeginTransaction(ctx)
+	if err != nil {
+		log.Println(err)
+
+		return nil, err
+	}
+
+	defer func() {
+		err = srv.OrderRepo.RollbackTransaction(ctx, tx)
+		if err != nil {
+			log.Println(err)
+		}
+	}()
+
+	order, err := srv.OrderRepo.GetOrderByID(ctx, id, tx)
 	if err != nil {
 		log.Println(err)
 
@@ -44,6 +58,13 @@ func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderB
 			Quantity:    item.Quantity,
 			Price:       item.Price,
 		})
+	}
+
+	err = srv.OrderRepo.CommitTransaction(ctx, tx)
+	if err != nil {
+		log.Println(err)
+
+		return nil, err
 	}
 
 	return &GetOrderByIDResponse{

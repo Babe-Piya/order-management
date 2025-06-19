@@ -17,7 +17,21 @@ type OrdersByPaginationResponse struct {
 }
 
 func (srv *orderService) GetOrdersByPagination(ctx context.Context, page int, rowOfPage int) (*OrdersByPaginationResponse, error) {
-	orders, err := srv.OrderRepo.GetOrdersByPagination(ctx, page, rowOfPage, nil)
+	tx, err := srv.OrderRepo.BeginTransaction(ctx)
+	if err != nil {
+		log.Println(err)
+
+		return nil, err
+	}
+
+	defer func() {
+		err = srv.OrderRepo.RollbackTransaction(ctx, tx)
+		if err != nil {
+			log.Println(err)
+		}
+	}()
+
+	orders, err := srv.OrderRepo.GetOrdersByPagination(ctx, page, rowOfPage, tx)
 	if err != nil {
 		log.Printf(err.Error())
 
@@ -46,9 +60,16 @@ func (srv *orderService) GetOrdersByPagination(ctx context.Context, page int, ro
 		})
 	}
 
-	count, err := srv.OrderRepo.GetCountOrder(ctx, nil)
+	count, err := srv.OrderRepo.GetCountOrder(ctx, tx)
 	if err != nil {
 		log.Printf(err.Error())
+
+		return nil, err
+	}
+
+	err = srv.OrderRepo.CommitTransaction(ctx, tx)
+	if err != nil {
+		log.Println(err)
 
 		return nil, err
 	}
