@@ -17,7 +17,7 @@ func Routes(e *echo.Echo, db *pgxpool.Pool, config *appconfig.AppConfig) {
 
 	orderService := service.NewOrderService(orderRepo)
 
-	orderCtrl := controller.NewOrderController(orderService)
+	orderCtrl := controller.NewOrderController(config.Timeout, orderService)
 
 	e.GET("/health", func(c echo.Context) error {
 		response := map[string]string{

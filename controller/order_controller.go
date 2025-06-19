@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"time"
+
 	"github/Babe-piya/order-management/service"
 
 	"github.com/labstack/echo/v4"
@@ -14,11 +16,13 @@ type OrderController interface {
 }
 
 type orderController struct {
+	Timeout      time.Duration
 	OrderService service.OrderService
 }
 
-func NewOrderController(orderService service.OrderService) OrderController {
+func NewOrderController(timeout time.Duration, orderService service.OrderService) OrderController {
 	return &orderController{
+		Timeout:      timeout,
 		OrderService: orderService,
 	}
 }

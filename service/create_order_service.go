@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
 	"log/slog"
 	"sync"
 
@@ -41,6 +40,7 @@ func (srv *orderService) CreateOrder(ctx context.Context, req CreateOrderRequest
 			if err != nil {
 				slog.Error("begin transaction error: ", err)
 				errChan <- err
+				return
 			}
 
 			defer func() {
@@ -67,24 +67,32 @@ func (srv *orderService) CreateOrder(ctx context.Context, req CreateOrderRequest
 			if err != nil {
 				slog.Error("create order error: ", err)
 				errChan <- err
+				return
 			}
 
 			err = srv.OrderRepo.CreateOrderItem(ctx, orderItems, orderID, tx)
 			if err != nil {
 				slog.Error("create order item error: ", err)
 				errChan <- err
+				return
 			}
 
 			if err = srv.OrderRepo.CommitTransaction(ctx, tx); err != nil {
 				errChan <- err
+				return
 			}
 		}(order)
 	}
 	wg.Wait()
 	close(errChan)
 
-	if len(errChan) > 0 {
-		return nil, errors.New("insert error")
+	var errorList []error
+	for err := range errChan {
+		errorList = append(errorList, err)
+	}
+
+	if len(errorList) > 0 {
+		return nil, errorList[len(errorList)-1]
 	}
 
 	return &CreateOrderResponse{

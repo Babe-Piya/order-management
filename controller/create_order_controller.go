@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"context"
+	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"github/Babe-piya/order-management/appconstant"
 	"github/Babe-piya/order-management/service"
@@ -12,6 +15,8 @@ import (
 
 func (ctrl *orderController) CreateOrder(c echo.Context) error {
 	ctx := c.Request().Context()
+	ctx, cancel := context.WithTimeout(ctx, ctrl.Timeout*time.Second)
+	defer cancel()
 
 	req := service.CreateOrderRequest{}
 	err := c.Bind(&req)
@@ -27,6 +32,12 @@ func (ctrl *orderController) CreateOrder(c echo.Context) error {
 	resp, err := ctrl.OrderService.CreateOrder(ctx, req)
 	if err != nil {
 		log.Println(err)
+		if errors.Is(err, context.DeadlineExceeded) {
+			return c.JSON(http.StatusRequestTimeout, appconstant.ErrorResponse{
+				Code:    "0",
+				Message: "timeout",
+			})
+		}
 
 		return c.JSON(http.StatusInternalServerError, appconstant.ErrorResponse{
 			Code:    "0",
