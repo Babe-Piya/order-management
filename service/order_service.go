@@ -10,6 +10,7 @@ type OrderService interface {
 	GetOrderByID(ctx context.Context, id int64) (*GetOrderByIDResponse, error)
 	GetOrdersByPagination(ctx context.Context, page int, rowOfPage int) (*OrdersByPaginationResponse, error)
 	UpdateStatusByID(ctx context.Context, req UpdateStatusByIDRequest) (*UpdateStatusResponse, error)
+	CreateOrder(ctx context.Context, req CreateOrderRequest) (*CreateOrderResponse, error)
 }
 
 type orderService struct {

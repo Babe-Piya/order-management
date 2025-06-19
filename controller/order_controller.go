@@ -10,6 +10,7 @@ type OrderController interface {
 	GetOrderByID(c echo.Context) error
 	GetOrdersByPagination(c echo.Context) error
 	UpdateStatusByID(c echo.Context) error
+	CreateOrder(c echo.Context) error
 }
 
 type orderController struct {

@@ -1,0 +1,20 @@
+### GET request to example server
+POST localhost:8181/orders
+Content-Type: application/json
+
+{
+  "order_detail": [{
+    "customer_name": "Red",
+    "order_items" : [{
+      "product_name": "dragon",
+      "quantity": 1,
+      "price": 500
+    },
+      {
+        "product_name": "bird",
+        "quantity": 1,
+        "price": 50
+      }
+    ]
+  }]
+}

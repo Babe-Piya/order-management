@@ -17,6 +17,7 @@ type OrderRepository interface {
 	GetCountOrder(ctx context.Context, tx pgx.Tx) (int, error)
 	UpdateStatusByID(ctx context.Context, status string, id int64, tx pgx.Tx) error
 	CreateOrder(ctx context.Context, data Order, tx pgx.Tx) (int64, error)
+	CreateOrderItem(ctx context.Context, data []OrderItem, orderID int64, tx pgx.Tx) error
 }
 type orderRepository struct {
 	DB *pgxpool.Pool

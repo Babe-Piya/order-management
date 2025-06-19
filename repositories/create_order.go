@@ -12,8 +12,8 @@ func (repo *orderRepository) CreateOrder(ctx context.Context, data Order, tx pgx
 	}
 
 	var orderID int64
-	err := repo.DB.QueryRow(ctx,
-		"INSERT INTO orders (customer_name, total_amount, status) VALUES ($1, $2 ,$3)",
+	err := tx.QueryRow(ctx,
+		"INSERT INTO orders (customer_name, total_amount, status) VALUES ($1, $2, $3) RETURNING id",
 		data.CustomerName, data.TotalAmount, data.Status).Scan(&orderID)
 	if err != nil {
 		return 0, err

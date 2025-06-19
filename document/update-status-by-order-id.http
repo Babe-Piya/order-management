@@ -5,7 +5,6 @@ Content-Type: application/json
 {
  "status": "SENDING"
 }
-###
 
 ### PUT update status by order_id when order_id is not found
 PUT localhost:8181/orders/255555/status
@@ -14,4 +13,3 @@ Content-Type: application/json
 {
   "status": "PENDING"
 }
-###

@@ -31,4 +31,5 @@ func Routes(e *echo.Echo, db *pgxpool.Pool, config *appconfig.AppConfig) {
 	orderAPI.GET("/:order_id", orderCtrl.GetOrderByID)
 	orderAPI.GET("", orderCtrl.GetOrdersByPagination)
 	orderAPI.PUT("/:order_id/status", orderCtrl.UpdateStatusByID)
+	orderAPI.POST("", orderCtrl.CreateOrder)
 }
