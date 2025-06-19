@@ -1,4 +1,4 @@
-### GET request to example server
+### Create one order with two order_item
 POST localhost:8181/orders
 Content-Type: application/json
 
@@ -17,4 +17,108 @@ Content-Type: application/json
       }
     ]
   }]
+}
+
+### Create many order with many order_item
+POST localhost:8181/orders
+Content-Type: application/json
+
+{
+  "order_detail": [{
+    "customer_name": "Blue",
+    "order_items" : [{
+      "product_name": "Phoenix",
+      "quantity": 1,
+      "price": 5000
+    },
+      {
+        "product_name": "Thunder bird",
+        "quantity": 1,
+        "price": 500
+      }
+    ]
+  },
+    {
+      "customer_name": "Green",
+      "order_items" : [{
+        "product_name": "Fire bird",
+        "quantity": 1,
+        "price": 100
+      },
+        {
+          "product_name": "fire boy",
+          "quantity": 1,
+          "price": 150
+        }
+      ]
+    },
+    {
+      "customer_name": "Purple",
+      "order_items" : [{
+        "product_name": "Leaf bird",
+        "quantity": 1,
+        "price": 2500
+      },
+        {
+          "product_name": "Leaf boy",
+          "quantity": 1,
+          "price": 350
+        }
+      ]
+    },
+    {
+      "customer_name": "Orange",
+      "order_items" : [{
+        "product_name": "Kinich",
+        "quantity": 1,
+        "price": 1600
+      }
+      ]
+    },
+    {
+      "customer_name": "Violet",
+      "order_items" : [{
+        "product_name": "Kachina",
+        "quantity": 1,
+        "price": 160
+      }
+      ]
+    },
+    {
+      "customer_name": "Gray",
+      "order_items" : [{
+        "product_name": "Mulani",
+        "quantity": 1,
+        "price": 3200
+      }
+      ]
+    },
+    {
+      "customer_name": "Gen",
+      "order_items" : [{
+        "product_name": "Mavuika",
+        "quantity": 1,
+        "price": 6400
+      }
+      ]
+    },
+    {
+      "customer_name": "Star",
+      "order_items" : [{
+        "product_name": "Catrorice",
+        "quantity": 1,
+        "price": 9000
+      }
+      ]
+    },
+    {
+      "customer_name": "Wuwa",
+      "order_items" : [{
+        "product_name": "Zani",
+        "quantity": 1,
+        "price": 800
+      }
+      ]
+    }
+  ]
 }
