@@ -1,0 +1,7 @@
+### GET list Orders without pagination (use default pagination)
+GET localhost:8181/orders
+###
+
+### GET list Orders with query param pagination
+GET localhost:8181/orders?page=1&row_of_page=1
+###

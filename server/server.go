@@ -14,11 +14,11 @@ import (
 	"github/Babe-piya/order-management/appconfig"
 	"github/Babe-piya/order-management/database"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 )
 
-func Start(config *appconfig.AppConfig) (*echo.Echo, *pgx.Conn) {
+func Start(config *appconfig.AppConfig) (*echo.Echo, *pgxpool.Pool) {
 	db, err := database.NewConnection(config.Database)
 	if err != nil {
 		log.Fatal(err)
@@ -37,7 +37,7 @@ func Start(config *appconfig.AppConfig) (*echo.Echo, *pgx.Conn) {
 	return e, db
 }
 
-func Shutdown(e *echo.Echo, db *pgx.Conn) {
+func Shutdown(e *echo.Echo, db *pgxpool.Pool) {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
@@ -48,9 +48,5 @@ func Shutdown(e *echo.Echo, db *pgx.Conn) {
 		e.Logger.Fatal(err)
 	}
 
-	defer func() {
-		if err := db.Close(ctx); err != nil {
-			e.Logger.Fatal(err)
-		}
-	}()
+	db.Close()
 }

@@ -5,3 +5,6 @@ Database:
   Username: "postgres"
   Password: "example"
   DatabaseName: "orders"
+  MaxPoolConnection: 5
+  MinPoolConnection: 2
+  Timezone: "Asia/Bangkok"

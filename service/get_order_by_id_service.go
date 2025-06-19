@@ -19,17 +19,34 @@ type OrderData struct {
 	Status       string
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
+	OrderItems   []OrderItemData
+}
+type OrderItemData struct {
+	ID          int64
+	ProductName string
+	Quantity    int
+	Price       float64
 }
 
-func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (GetOrderByIDResponse, error) {
+func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderByIDResponse, error) {
 	order, err := srv.OrderRepo.GetOrderByID(ctx, id, nil)
 	if err != nil {
 		log.Println(err)
 
-		return GetOrderByIDResponse{}, err
+		return nil, err
 	}
 
-	return GetOrderByIDResponse{
+	var orderItems []OrderItemData
+	for _, item := range order.OrderItems {
+		orderItems = append(orderItems, OrderItemData{
+			ID:          item.ID,
+			ProductName: item.ProductName,
+			Quantity:    item.Quantity,
+			Price:       item.Price,
+		})
+	}
+
+	return &GetOrderByIDResponse{
 		Code:    "1",
 		Message: "Success",
 		Data: OrderData{
@@ -39,6 +56,7 @@ func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (GetOrderBy
 			Status:       order.Status,
 			CreatedAt:    order.CreatedAt,
 			UpdatedAt:    order.UpdatedAt,
+			OrderItems:   orderItems,
 		},
 	}, nil
 }
