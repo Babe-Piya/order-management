@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 	"errors"
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -21,7 +21,7 @@ func (ctrl *orderController) CreateOrder(c echo.Context) error {
 	req := service.CreateOrderRequest{}
 	err := c.Bind(&req)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
 			Code:    "0",
@@ -31,7 +31,7 @@ func (ctrl *orderController) CreateOrder(c echo.Context) error {
 
 	resp, err := ctrl.OrderService.CreateOrder(ctx, req)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		if errors.Is(err, context.DeadlineExceeded) {
 			return c.JSON(http.StatusRequestTimeout, appconstant.ErrorResponse{
 				Code:    "0",

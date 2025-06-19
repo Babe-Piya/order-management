@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"log"
+	"log/slog"
 )
 
 type UpdateStatusByIDRequest struct {
@@ -18,7 +18,7 @@ type UpdateStatusResponse struct {
 func (srv *orderService) UpdateStatusByID(ctx context.Context, req UpdateStatusByIDRequest) (*UpdateStatusResponse, error) {
 	tx, err := srv.OrderRepo.BeginTransaction(ctx)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return nil, err
 	}
@@ -26,20 +26,20 @@ func (srv *orderService) UpdateStatusByID(ctx context.Context, req UpdateStatusB
 	defer func() {
 		err = srv.OrderRepo.RollbackTransaction(ctx, tx)
 		if err != nil {
-			log.Println(err)
+			slog.Warn(err.Error())
 		}
 	}()
 
 	err = srv.OrderRepo.UpdateStatusByID(ctx, req.Status, req.ID, tx)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return nil, err
 	}
 
 	err = srv.OrderRepo.CommitTransaction(ctx, tx)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return nil, err
 	}

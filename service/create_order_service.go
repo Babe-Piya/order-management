@@ -45,7 +45,7 @@ func (srv *orderService) CreateOrder(ctx context.Context, req CreateOrderRequest
 
 			defer func() {
 				if err = srv.OrderRepo.RollbackTransaction(ctx, tx); err != nil {
-					slog.Error("rollback err: ", err)
+					slog.Warn(err.Error())
 				}
 			}()
 

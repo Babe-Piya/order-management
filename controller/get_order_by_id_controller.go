@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 	"errors"
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -21,7 +21,7 @@ func (ctrl *orderController) GetOrderByID(c echo.Context) error {
 	id := c.Param("order_id")
 	orderID, err := strconv.Atoi(id)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
 			Code:    "0",
@@ -31,7 +31,7 @@ func (ctrl *orderController) GetOrderByID(c echo.Context) error {
 
 	resp, err := ctrl.OrderService.GetOrderByID(ctx, int64(orderID))
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		if errors.Is(err, context.DeadlineExceeded) {
 			return c.JSON(http.StatusRequestTimeout, appconstant.ErrorResponse{
 				Code:    "0",

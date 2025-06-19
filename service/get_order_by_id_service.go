@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"time"
 )
 
@@ -31,7 +31,7 @@ type OrderItemData struct {
 func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderByIDResponse, error) {
 	tx, err := srv.OrderRepo.BeginTransaction(ctx)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return nil, err
 	}
@@ -39,13 +39,13 @@ func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderB
 	defer func() {
 		err = srv.OrderRepo.RollbackTransaction(ctx, tx)
 		if err != nil {
-			log.Println(err)
+			slog.Warn(err.Error())
 		}
 	}()
 
 	order, err := srv.OrderRepo.GetOrderByID(ctx, id, tx)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderB
 
 	err = srv.OrderRepo.CommitTransaction(ctx, tx)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return nil, err
 	}

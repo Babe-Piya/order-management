@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"log"
+	"log/slog"
 	"math"
 )
 
@@ -19,7 +20,7 @@ type OrdersByPaginationResponse struct {
 func (srv *orderService) GetOrdersByPagination(ctx context.Context, page int, rowOfPage int) (*OrdersByPaginationResponse, error) {
 	tx, err := srv.OrderRepo.BeginTransaction(ctx)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return nil, err
 	}
@@ -27,7 +28,7 @@ func (srv *orderService) GetOrdersByPagination(ctx context.Context, page int, ro
 	defer func() {
 		err = srv.OrderRepo.RollbackTransaction(ctx, tx)
 		if err != nil {
-			log.Println(err)
+			slog.Warn(err.Error())
 		}
 	}()
 
@@ -69,7 +70,7 @@ func (srv *orderService) GetOrdersByPagination(ctx context.Context, page int, ro
 
 	err = srv.OrderRepo.CommitTransaction(ctx, tx)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 
 		return nil, err
 	}
