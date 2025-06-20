@@ -45,5 +45,5 @@ func (ctrl *orderController) CreateOrder(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(http.StatusCreated, resp)
 }
