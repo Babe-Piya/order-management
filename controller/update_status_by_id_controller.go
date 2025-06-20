@@ -25,7 +25,7 @@ func (ctrl *orderController) UpdateStatusByID(c echo.Context) error {
 		slog.Error("convert order_id type from string to int error:", err)
 
 		return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
-			Code:    "0",
+			Code:    appconstant.ErrorCode,
 			Message: err.Error(),
 		})
 	}
@@ -36,7 +36,7 @@ func (ctrl *orderController) UpdateStatusByID(c echo.Context) error {
 		slog.Error("bind request to struct error:", err)
 
 		return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
-			Code:    "0",
+			Code:    appconstant.ErrorCode,
 			Message: err.Error(),
 		})
 	}
@@ -46,13 +46,13 @@ func (ctrl *orderController) UpdateStatusByID(c echo.Context) error {
 		slog.Error("UpdateStatusByID error:", err)
 		if errors.Is(err, context.DeadlineExceeded) {
 			return c.JSON(http.StatusRequestTimeout, appconstant.ErrorResponse{
-				Code:    "0",
-				Message: "timeout",
+				Code:    appconstant.ErrorCode,
+				Message: appconstant.ErrorTimeout,
 			})
 		}
 
 		return c.JSON(http.StatusInternalServerError, appconstant.ErrorResponse{
-			Code:    "0",
+			Code:    appconstant.ErrorCode,
 			Message: err.Error(),
 		})
 	}

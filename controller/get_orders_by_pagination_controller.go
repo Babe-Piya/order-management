@@ -27,7 +27,7 @@ func (ctrl *orderController) GetOrdersByPagination(c echo.Context) error {
 			slog.Error("convert page type from string to int error:", err)
 
 			return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
-				Code:    "0",
+				Code:    appconstant.ErrorCode,
 				Message: err.Error(),
 			})
 		}
@@ -41,7 +41,7 @@ func (ctrl *orderController) GetOrdersByPagination(c echo.Context) error {
 			slog.Error("convert row_of_page type from string to int error:", err)
 
 			return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
-				Code:    "0",
+				Code:    appconstant.ErrorCode,
 				Message: err.Error(),
 			})
 		}
@@ -52,13 +52,13 @@ func (ctrl *orderController) GetOrdersByPagination(c echo.Context) error {
 		slog.Error("GetOrdersByPagination error:", err)
 		if errors.Is(err, context.DeadlineExceeded) {
 			return c.JSON(http.StatusRequestTimeout, appconstant.ErrorResponse{
-				Code:    "0",
-				Message: "timeout",
+				Code:    appconstant.ErrorCode,
+				Message: appconstant.ErrorTimeout,
 			})
 		}
 
 		return c.JSON(http.StatusInternalServerError, appconstant.ErrorResponse{
-			Code:    "0",
+			Code:    appconstant.ErrorCode,
 			Message: err.Error(),
 		})
 	}

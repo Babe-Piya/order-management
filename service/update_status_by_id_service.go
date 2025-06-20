@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"log/slog"
+
+	"github/Babe-piya/order-management/appconstant"
 )
 
 type UpdateStatusByIDRequest struct {
@@ -45,7 +47,7 @@ func (srv *orderService) UpdateStatusByID(ctx context.Context, req UpdateStatusB
 	}
 
 	return &UpdateStatusResponse{
-		Code:    "1",
-		Message: "Success",
+		Code:    appconstant.SuccessCode,
+		Message: appconstant.SuccessMsg,
 	}, nil
 }

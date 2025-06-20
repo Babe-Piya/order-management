@@ -4,6 +4,8 @@ import (
 	"context"
 	"log/slog"
 	"time"
+
+	"github/Babe-piya/order-management/appconstant"
 )
 
 type GetOrderByIDResponse struct {
@@ -68,8 +70,8 @@ func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderB
 	}
 
 	return &GetOrderByIDResponse{
-		Code:    "1",
-		Message: "Success",
+		Code:    appconstant.SuccessCode,
+		Message: appconstant.SuccessMsg,
 		Data: OrderData{
 			ID:           order.ID,
 			CustomerName: order.CustomerName,

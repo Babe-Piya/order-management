@@ -4,6 +4,8 @@ import (
 	"context"
 	"log/slog"
 	"math"
+
+	"github/Babe-piya/order-management/appconstant"
 )
 
 type OrdersByPaginationResponse struct {
@@ -77,8 +79,8 @@ func (srv *orderService) GetOrdersByPagination(ctx context.Context, page int, ro
 	totalPage := int(math.Ceil(float64(count) / float64(rowOfPage)))
 
 	return &OrdersByPaginationResponse{
-		Code:             "1",
-		Message:          "Success",
+		Code:             appconstant.SuccessCode,
+		Message:          appconstant.SuccessMsg,
 		Data:             orderResults,
 		TotalOrder:       count,
 		Page:             page,

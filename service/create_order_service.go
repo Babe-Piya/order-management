@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"sync"
 
+	"github/Babe-piya/order-management/appconstant"
 	"github/Babe-piya/order-management/repositories"
 )
 
@@ -97,7 +98,7 @@ func (srv *orderService) CreateOrder(ctx context.Context, req CreateOrderRequest
 	}
 
 	return &CreateOrderResponse{
-		Code:    "1",
-		Message: "Success",
+		Code:    appconstant.SuccessCode,
+		Message: appconstant.SuccessMsg,
 	}, nil
 }
