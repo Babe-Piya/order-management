@@ -22,7 +22,7 @@ func (ctrl *orderController) UpdateStatusByID(c echo.Context) error {
 	id := c.Param("order_id")
 	orderID, err := strconv.Atoi(id)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("convert order_id type from string to int error:", err)
 
 		return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
 			Code:    "0",
@@ -33,7 +33,7 @@ func (ctrl *orderController) UpdateStatusByID(c echo.Context) error {
 	req := service.UpdateStatusByIDRequest{}
 	err = c.Bind(&req)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("bind request to struct error:", err)
 
 		return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
 			Code:    "0",
@@ -43,7 +43,7 @@ func (ctrl *orderController) UpdateStatusByID(c echo.Context) error {
 	req.ID = int64(orderID)
 	resp, err := ctrl.OrderService.UpdateStatusByID(ctx, req)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("UpdateStatusByID error:", err)
 		if errors.Is(err, context.DeadlineExceeded) {
 			return c.JSON(http.StatusRequestTimeout, appconstant.ErrorResponse{
 				Code:    "0",

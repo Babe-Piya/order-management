@@ -24,7 +24,7 @@ func (ctrl *orderController) GetOrdersByPagination(c echo.Context) error {
 	if pageStr != "" {
 		page, err = strconv.Atoi(pageStr)
 		if err != nil {
-			slog.Error(err.Error())
+			slog.Error("convert page type from string to int error:", err)
 
 			return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
 				Code:    "0",
@@ -38,7 +38,7 @@ func (ctrl *orderController) GetOrdersByPagination(c echo.Context) error {
 	if rowOfPageStr != "" {
 		rowOfPage, err = strconv.Atoi(rowOfPageStr)
 		if err != nil {
-			slog.Error(err.Error())
+			slog.Error("convert row_of_page type from string to int error:", err)
 
 			return c.JSON(http.StatusBadRequest, appconstant.ErrorResponse{
 				Code:    "0",
@@ -49,7 +49,7 @@ func (ctrl *orderController) GetOrdersByPagination(c echo.Context) error {
 
 	resp, err := ctrl.OrderService.GetOrdersByPagination(ctx, page, rowOfPage)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("GetOrdersByPagination error:", err)
 		if errors.Is(err, context.DeadlineExceeded) {
 			return c.JSON(http.StatusRequestTimeout, appconstant.ErrorResponse{
 				Code:    "0",

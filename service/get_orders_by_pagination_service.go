@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"log"
 	"log/slog"
 	"math"
 )
@@ -20,7 +19,7 @@ type OrdersByPaginationResponse struct {
 func (srv *orderService) GetOrdersByPagination(ctx context.Context, page int, rowOfPage int) (*OrdersByPaginationResponse, error) {
 	tx, err := srv.OrderRepo.BeginTransaction(ctx)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("begin transaction error:", err)
 
 		return nil, err
 	}
@@ -28,13 +27,13 @@ func (srv *orderService) GetOrdersByPagination(ctx context.Context, page int, ro
 	defer func() {
 		err = srv.OrderRepo.RollbackTransaction(ctx, tx)
 		if err != nil {
-			slog.Warn(err.Error())
+			slog.Warn("rollback transaction error:", err)
 		}
 	}()
 
 	orders, err := srv.OrderRepo.GetOrdersByPagination(ctx, page, rowOfPage, tx)
 	if err != nil {
-		log.Printf(err.Error())
+		slog.Error("GetOrdersByPagination error:", err)
 
 		return nil, err
 	}
@@ -63,14 +62,14 @@ func (srv *orderService) GetOrdersByPagination(ctx context.Context, page int, ro
 
 	count, err := srv.OrderRepo.GetCountOrder(ctx, tx)
 	if err != nil {
-		log.Printf(err.Error())
+		slog.Error("GetCountOrder error:", err)
 
 		return nil, err
 	}
 
 	err = srv.OrderRepo.CommitTransaction(ctx, tx)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("commit transaction error:", err)
 
 		return nil, err
 	}

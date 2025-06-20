@@ -18,7 +18,7 @@ type UpdateStatusResponse struct {
 func (srv *orderService) UpdateStatusByID(ctx context.Context, req UpdateStatusByIDRequest) (*UpdateStatusResponse, error) {
 	tx, err := srv.OrderRepo.BeginTransaction(ctx)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("begin transaction error:", err)
 
 		return nil, err
 	}
@@ -26,20 +26,20 @@ func (srv *orderService) UpdateStatusByID(ctx context.Context, req UpdateStatusB
 	defer func() {
 		err = srv.OrderRepo.RollbackTransaction(ctx, tx)
 		if err != nil {
-			slog.Warn(err.Error())
+			slog.Warn("rollback transaction error:", err)
 		}
 	}()
 
 	err = srv.OrderRepo.UpdateStatusByID(ctx, req.Status, req.ID, tx)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("UpdateStatusByID error:", err)
 
 		return nil, err
 	}
 
 	err = srv.OrderRepo.CommitTransaction(ctx, tx)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("commit transaction error:", err)
 
 		return nil, err
 	}

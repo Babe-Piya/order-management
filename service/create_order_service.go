@@ -38,14 +38,14 @@ func (srv *orderService) CreateOrder(ctx context.Context, req CreateOrderRequest
 			defer wg.Done()
 			tx, err := srv.OrderRepo.BeginTransaction(ctx)
 			if err != nil {
-				slog.Error("begin transaction error: ", err)
+				slog.Error("begin transaction error:", err)
 				errChan <- err
 				return
 			}
 
 			defer func() {
 				if err = srv.OrderRepo.RollbackTransaction(ctx, tx); err != nil {
-					slog.Warn(err.Error())
+					slog.Warn("rollback transaction error:", err)
 				}
 			}()
 
@@ -65,19 +65,20 @@ func (srv *orderService) CreateOrder(ctx context.Context, req CreateOrderRequest
 				Status:       "ORDER CREATED",
 			}, tx)
 			if err != nil {
-				slog.Error("create order error: ", err)
+				slog.Error("create order error:", err)
 				errChan <- err
 				return
 			}
 
 			err = srv.OrderRepo.CreateOrderItem(ctx, orderItems, orderID, tx)
 			if err != nil {
-				slog.Error("create order item error: ", err)
+				slog.Error("create order item error:", err)
 				errChan <- err
 				return
 			}
 
 			if err = srv.OrderRepo.CommitTransaction(ctx, tx); err != nil {
+				slog.Error("commit transaction error:", err)
 				errChan <- err
 				return
 			}

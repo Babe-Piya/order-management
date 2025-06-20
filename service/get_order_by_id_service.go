@@ -13,25 +13,25 @@ type GetOrderByIDResponse struct {
 }
 
 type OrderData struct {
-	ID           int64
-	CustomerName string
-	TotalAmount  float64
-	Status       string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	OrderItems   []OrderItemData
+	ID           int64           `json:"id"`
+	CustomerName string          `json:"customer_name"`
+	TotalAmount  float64         `json:"total_amount"`
+	Status       string          `json:"status"`
+	CreatedAt    time.Time       `json:"created_at"`
+	UpdatedAt    time.Time       `json:"updated_at"`
+	OrderItems   []OrderItemData `json:"order_items"`
 }
 type OrderItemData struct {
-	ID          int64
-	ProductName string
-	Quantity    int
-	Price       float64
+	ID          int64   `json:"id"`
+	ProductName string  `json:"product_name"`
+	Quantity    int     `json:"quantity"`
+	Price       float64 `json:"price"`
 }
 
 func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderByIDResponse, error) {
 	tx, err := srv.OrderRepo.BeginTransaction(ctx)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("begin transaction error:", err)
 
 		return nil, err
 	}
@@ -39,13 +39,13 @@ func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderB
 	defer func() {
 		err = srv.OrderRepo.RollbackTransaction(ctx, tx)
 		if err != nil {
-			slog.Warn(err.Error())
+			slog.Warn("rollback transaction error:", err)
 		}
 	}()
 
 	order, err := srv.OrderRepo.GetOrderByID(ctx, id, tx)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("GetOrderByID error:", err)
 
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (srv *orderService) GetOrderByID(ctx context.Context, id int64) (*GetOrderB
 
 	err = srv.OrderRepo.CommitTransaction(ctx, tx)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("commit transaction error:", err)
 
 		return nil, err
 	}
